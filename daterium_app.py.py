@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-
+import feedparser # Add this to your imports
 # 1. Page Configuration
 st.set_page_config(page_title="Daterium AI", page_icon="📊", layout="wide")
 
@@ -34,3 +34,17 @@ st.subheader("🤖 Ask Daterium")
 prompt = st.chat_input("Ex: Explain the Misery Index...")
 if prompt:
     st.write(f"Daterium is analyzing: {prompt}")
+
+# Inside your Sidebar section:
+st.subheader("📰 Live Economic Pulse")
+
+# Link to a Pakistani Economic RSS Feed (example)
+# You can use any RSS link here
+rss_url = "https://econlib.org/?feed=rss" 
+feed = feedparser.parse(rss_url)
+
+# Display the top 3 latest headlines
+for entry in feed.entries[:3]:
+    st.info(f"**{entry.title}**")
+    st.caption(f"Published: {entry.published}")
+    st.write(f"[Read More]({entry.link})")
