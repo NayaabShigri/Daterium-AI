@@ -48,3 +48,28 @@ for entry in feed.entries[:3]:
     st.info(f"**{entry.title}**")
     st.caption(f"Published: {entry.published}")
     st.write(f"[Read More]({entry.link})")
+    # 1. Add this at the very top of your imports
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+
+# 2. Initialize the analyzer
+analyzer = SentimentIntensityAnalyzer()
+
+# 3. Use this function to analyze headlines
+def get_mood(text):
+    score = analyzer.polarity_scores(text)['compound']
+    if score >= 0.05:
+        return "🟢 Positive", "success"
+    elif score <= -0.05:
+        return "🔴 Negative", "error"
+    else:
+        return "⚪ Neutral", "secondary"
+
+# 4. Example inside your sidebar loop
+headline = "IMF Update: Pakistan's growth forecast revised to 3.5%"
+mood_label, mood_type = get_mood(headline)
+
+st.sidebar.markdown(f"**Mood:** {mood_label}")
+if mood_type == "success":
+    st.sidebar.success(headline)
+elif mood_type == "error":
+    st.sidebar.error(headline)
